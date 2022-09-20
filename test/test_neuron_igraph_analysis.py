@@ -1,10 +1,8 @@
 import unittest
-import neuron_igraph_analysis as nrn_graph
 
-from neuprint import Client
-from neuprint import fetch_neurons, NeuronCriteria as NC, merge_neuron_properties
-from neuprint import fetch_skeleton, fetch_synapses, fetch_synapse_connections, attach_synapses_to_skeleton, skeleton
-from neuprint.utils import connection_table_to_matrix
+import sys
+sys.path.append(r'C:\Users\ahshenas\Documents\GitHub\neuron-igraph-analysis')
+import neuron_igraph_analysis as nrn_graph
 
 
 class TestNeuronIgraphAnalysis(unittest.TestCase):

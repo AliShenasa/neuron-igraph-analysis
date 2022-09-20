@@ -50,6 +50,14 @@ def dist(point1, point2):
     return np.sqrt(total)
 
 
+def neuprint_to_um(num):
+    """
+    Given a number from neuprint, return it in micrometers
+    Assumes 1 unit from neuprint is 8 nanometers
+    """
+    return num * 8 / 1000
+
+
 def addEdgeLength(g, edge):
     """
     Given an edge, get its vertices
@@ -151,6 +159,10 @@ def initialize_dataframe(bodyId=1140245595):
     skeleton_w_syns['edge_color'] = 'black'
     skeleton_w_syns['syn_size'] = 0.01
 
+    # Convert units from neuprint voxels (8 nm) to micrometers
+    for col in ['x', 'y', 'z', 'radius']:
+        skeleton_w_syns[col] = skeleton_w_syns[col].apply(neuprint_to_um)
+
     return skeleton_w_syns
 
 
@@ -165,14 +177,6 @@ def createGraph(skeleton_w_syns):
         addEdgeLength(g, edge)
 
     return g
-
-
-def neuprint_to_um(num):
-    """
-    Given a number from neuprint, return it in micrometers
-    Assumes 1 unit from neuprint is 8 nanometers
-    """
-    return num * 8 / 1000
 
 
 def df_syn_dist(g, row, outputSynIdx):
@@ -195,7 +199,7 @@ def calculateSynDistance(g, skeleton_w_syns, outputsyn):
     """
     lastRowId = skeleton_w_syns['rowId'].iat[-1]
     temp_skel_w_syns = skeleton_w_syns.loc[skeleton_w_syns['rowId'] < lastRowId]
-    skeleton_w_syns['distance'] = temp_skel_w_syns.apply(lambda row: df_syn_dist(g, row, outputsyn), axis=1)
+    skeleton_w_syns['distance_um'] = temp_skel_w_syns.apply(lambda row: df_syn_dist(g, row, outputsyn), axis=1)
 
 
 def plotDendrogram(g, rootVertex, skeleton_w_syns, panel, filename):
